@@ -3,29 +3,42 @@
 import {useUser} from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
+import {  doc, getDoc, setDoc, collection } from 'firebase/firestore'
 import { db } from '@/firebase'
-import { useRouter } from 'next/router'
-import { CardActionArea } from '@mui/material'
+import { useRouter } from 'next/navigation'
+import {
+    Container,
+    TextField,
+    Button,
+    Typography,
+    Box,
+    CardActionArea,
+    CardContent,
+    DialogContentText,
+    DialogActions,
+    Grid,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    Card
+  } from '@mui/material'
 
 export default function Flashcards(){
     const {isLoaded, isSignedIn, user} = useUser()
     const [flashcards, setFlashcards] = useState([])
     const router = useRouter()
 
-    useEffect(()=>{
-        async function getFlashcards(){
-            if(!user) return
-            const docRef = doc(collection(db, 'users'), user.id)
-            const docSnap = await getDoc(docRef)
-
-            if (docSnap.exists()){
-                const collection = docSnap.data().flashcards || []
-                setFlashcards(collections)
-            }
-            else{
-                await setDoc(docRef, {flascards: []})
-            }
+    useEffect(() => {
+        async function getFlashcards() {
+          if (!user) return
+          const docRef = doc(collection(db, 'users'), user.id)
+          const docSnap = await getDoc(docRef)
+          if (docSnap.exists()) {
+            const collections = docSnap.data().flashcards || []
+            setFlashcards(collections)
+          } else {
+            await setDoc(docRef, { flashcards: [] })
+          }
         }
 
         getFlashcards()
@@ -39,7 +52,7 @@ export default function Flashcards(){
     }
 
     return (
-    <Contained maxWdith ='100vw'>
+    <Container maxWdith ='100vw'>
         <Grid container spacing ={3} sx={{
             mt:4
         }}>
@@ -59,5 +72,5 @@ export default function Flashcards(){
 
             ))}
         </Grid>
-    </Contained>)
+    </Container>)
 }

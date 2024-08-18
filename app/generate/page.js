@@ -1,7 +1,7 @@
 'use client'
 
 import { useUser, ClerkProvider } from "@clerk/nextjs"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import {
   Container,
   TextField,
@@ -12,7 +12,11 @@ import {
   CardContent,
   DialogContentText,
   DialogActions,
-  Grid
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Card
 } from '@mui/material'
 import { useState } from 'react'
 import{db} from '@/firebase'
@@ -29,12 +33,27 @@ export default function Generate(){
     const router = useRouter()
 
     const handleSubmit=async()=>{
-        fetch('api/generate',{
-            method: 'POST',
-            body: text,
+      if (!text.trim()) {
+        alert('Please enter some text to generate flashcards.')
+        return
+      }
+    
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          body: text,
         })
-        .then((res)=>res.json())
-        .then((data) => setFlashcards(data))
+    
+        if (!response.ok) {
+          throw new Error('Failed to generate flashcards')
+        }
+    
+        const data = await response.json()
+        setFlashcards(data)
+      } catch (error) {
+        console.error('Error generating flashcards:', error)
+        alert('An error occurred while generating flashcards. Please try again.')
+      }
     }
 
     const handleCardClick = (id)=>{
@@ -149,8 +168,8 @@ export default function Generate(){
                               padding:2,
                               boxString:'border-box',
                             },
-                            '& > div > div:nth-of-typ(2)':{
-                              transofmr: 'rotateY(180deg)',
+                            '& > div > div:nth-of-type(2)':{
+                              transform: 'rotateY(180deg)',
                             },
                           }}>
                             <div>
@@ -159,8 +178,6 @@ export default function Generate(){
                                   {flashcard.front}
                                 </Typography>
                               </div>
-                            </div>
-                            <div>
                               <div>
                                 <Typography variant = "h5" component = "div">
                                   {flashcard.back}
