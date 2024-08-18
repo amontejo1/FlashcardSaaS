@@ -24,7 +24,7 @@ export async function POST(req){
             {role: "system", content: systemPrompt},
             {role: "user", content: data},
         ],
-        model: "gpt-4o",
+        model: "gpt-3.5-turbo",
         repsonse_format: {type: 'json_object'},
     })
 
