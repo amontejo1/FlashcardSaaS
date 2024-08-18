@@ -22,7 +22,6 @@ import {
 import { useState } from 'react'
 import { db } from '@/firebase'
 import { doc, collection, getDoc, writeBatch } from 'firebase/firestore'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import CloseIcon from '@mui/icons-material/Close'
 
 export default function Generate() {
@@ -208,7 +207,6 @@ export default function Generate() {
               color='secondary'
               onClick={handleOpen}
               sx={{ borderRadius: 2, textTransform: 'none' }}
-              endIcon={<ArrowForwardIcon />}
             >
               Save
             </Button>
